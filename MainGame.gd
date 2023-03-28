@@ -33,24 +33,51 @@ func draw_snake():
 		if block_index == 0:
 			var head_direction = relation2(snake_body[0],snake_body[1])
 			if head_direction == 'right':
-				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(4,0))
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,true,false,false,Vector2(2,0))
 			if head_direction == 'left':
-				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(7,0))
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(2,0))
 			if head_direction == 'up':
-				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,true,false,Vector2(2,0))
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(3,0))
 			if head_direction == 'down':
-				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(2,0))	
-		else:		
-			$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(14,0))
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,true,false,Vector2(3,0))	
+		elif block_index == snake_body.size()-1:
+			var tail_direction = relation2(snake_body[-1],snake_body[-2])
+			if tail_direction == 'right':
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,true,false,false,Vector2(1,0))
+			if tail_direction == 'left':
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(1,0))
+			if tail_direction == 'up':
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(1,1))
+			if tail_direction == 'down':
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,true,false,Vector2(1,1))
+		
+		else:
+			var previous_block = snake_body[block_index + 1] - block
+			var next_block = snake_body[block_index - 1] - block
+			
+			if previous_block.x == next_block.x:
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(4,1))
+			elif previous_block.y == next_block.y:
+				$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(4,0))	
+			else:
+				if previous_block.x == -1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == -1:
+					$SnakeApple.set_cell(block.x,block.y,SNAKE,true,true,false,Vector2(5,0))
+				if previous_block.x == -1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == -1:
+					$SnakeApple.set_cell(block.x,block.y,SNAKE,true,false,false,Vector2(5,0))
+				if previous_block.x == 1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == 1:
+					$SnakeApple.set_cell(block.x,block.y,SNAKE,false,true,false,Vector2(5,0))
+				if previous_block.x == 1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == 1:
+					$SnakeApple.set_cell(block.x,block.y,SNAKE,false,false,false,Vector2(5,0))
+			
 
 
 
 func relation2(first_block:Vector2,second_block:Vector2):
 	var block_relation = second_block - first_block
-	if block_relation == Vector2(0,-1): return 'left'
-	if block_relation == Vector2(0,1): return 'right'
-	if block_relation == Vector2(-1,0): return 'down'
-	if block_relation == Vector2(1,0): return 'up'
+	if block_relation == Vector2(-1,0): return 'left'
+	if block_relation == Vector2(1,0): return 'right'
+	if block_relation == Vector2(0,1): return 'down'
+	if block_relation == Vector2(0,-1): return 'up'
 	
 
 func move_snake():
